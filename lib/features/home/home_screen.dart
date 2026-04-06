@@ -77,7 +77,6 @@ class _HomeContentState extends State<HomeContent> {
     });
   }
 
-  // ✅ Fix: Time-based greeting
   String get _greeting {
     final hour = DateTime.now().hour;
     if (hour < 12) return "Good Morning! ☀️";

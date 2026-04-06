@@ -48,59 +48,69 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 40),
-              Text(
-                "Welcome to",
-                style: GoogleFonts.poppins(
-                  color: AppColors.textSecondary,
-                  fontSize: 16,
-                ),
-              ),
-              Text(
-                "CashFlow 💰",
-                style: GoogleFonts.poppins(
-                  color: AppColors.textPrimary,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "Let's set up your profile",
-                style: GoogleFonts.poppins(
-                  color: AppColors.textSecondary,
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 40),
-              _buildLabel("Your Name"),
-              _buildTextField(_nameController, "Enter your name", false),
-              const SizedBox(height: 20),
-              _buildLabel("Monthly Income"),
-              _buildTextField(_incomeController, "Enter monthly income", true),
-              const SizedBox(height: 20),
-              _buildLabel("Currency"),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: AppColors.card,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: _selectedCurrency,
-                    dropdownColor: AppColors.card,
-                    style: GoogleFonts.poppins(color: AppColors.textPrimary),
-                    isExpanded: true,
-                    items: _currencies
-                        .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                        .toList(),
-                    onChanged: (val) =>
-                        setState(() => _selectedCurrency = val!),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 40),
+                      Text(
+                        "Welcome to",
+                        style: GoogleFonts.poppins(
+                          color: AppColors.textSecondary,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        "CashFlow 💰",
+                        style: GoogleFonts.poppins(
+                          color: AppColors.textPrimary,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Let's set up your profile",
+                        style: GoogleFonts.poppins(
+                          color: AppColors.textSecondary,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      _buildLabel("Your Name"),
+                      _buildTextField(_nameController, "Enter your name", false),
+                      const SizedBox(height: 20),
+                      _buildLabel("Monthly Income"),
+                      _buildTextField(_incomeController, "Enter monthly income", true),
+                      const SizedBox(height: 20),
+                      _buildLabel("Currency"),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: AppColors.card,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: _selectedCurrency,
+                            dropdownColor: AppColors.card,
+                            style: GoogleFonts.poppins(color: AppColors.textPrimary),
+                            isExpanded: true,
+                            items: _currencies
+                                .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                                .toList(),
+                            onChanged: (val) =>
+                                setState(() => _selectedCurrency = val!),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20), // Spacing before the end of scroll view
+                    ],
                   ),
                 ),
               ),
-              const Spacer(),
+              const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -122,7 +132,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
             ],
           ),
         ),
