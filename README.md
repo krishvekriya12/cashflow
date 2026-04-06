@@ -11,10 +11,12 @@
 [![Hive](https://img.shields.io/badge/Hive-Local%20DB-FF7043?style=for-the-badge&logo=hive&logoColor=white)](https://pub.dev/packages/hive)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/krishvekriya12/cashflow?style=for-the-badge&color=yellow)](https://github.com/krishvekriya12/cashflow/stargazers)
+[![Release](https://img.shields.io/github/v/release/krishvekriya12/cashflow?style=for-the-badge&color=brightgreen&label=Latest%20Release)](https://github.com/krishvekriya12/cashflow/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/krishvekriya12/cashflow/total?style=for-the-badge&color=blue&label=APK%20Downloads)](https://github.com/krishvekriya12/cashflow/releases)
 
 **Take control of your money.** CashFlow is a beautifully designed, offline-first personal finance tracker built with Flutter. Track income & expenses, visualize your spending with stunning charts, and get smart reports — all on your device, no login required.
 
-[📱 Download APK](#installation) · [🐛 Report Bug](https://github.com/krishvekriya12/cashflow/issues) · [✨ Request Feature](https://github.com/krishvekriya12/cashflow/issues)
+[📥 **Download APK**](https://github.com/krishvekriya12/cashflow/releases/latest) · [🐛 Report Bug](https://github.com/krishvekriya12/cashflow/issues) · [✨ Request Feature](https://github.com/krishvekriya12/cashflow/issues)
 
 </div>
 
