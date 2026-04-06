@@ -96,13 +96,16 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final totals = _categoryTotals;
-    final totalExpense = totals.values.fold(0.0, (sum, val) => sum + val);
-    final sortedTotals = totals.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
+    return ValueListenableBuilder(
+      valueListenable: _box.listenable(),
+      builder: (context, box, _) {
+        final totals = _categoryTotals;
+        final totalExpense = totals.values.fold(0.0, (sum, val) => sum + val);
+        final sortedTotals = totals.entries.toList()
+          ..sort((a, b) => b.value.compareTo(a.value));
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
+        return Scaffold(
+          backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
@@ -537,6 +540,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           ],
         ),
       ),
+    );
+      },
     );
   }
 

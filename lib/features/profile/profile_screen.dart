@@ -117,114 +117,119 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final totalTransactions = Hive.box('transactions').length;
+    return ValueListenableBuilder(
+      valueListenable: Hive.box('transactions').listenable(),
+      builder: (context, box, _) {
+        final totalTransactions = box.length;
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.background,
-        title: Text(
-          "Profile",
-          style: GoogleFonts.poppins(color: AppColors.textPrimary),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            // Profile Header
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: AppColors.card,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Icon(
-                      Icons.person_rounded,
-                      color: AppColors.primary,
-                      size: 40,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    _name,
-                    style: GoogleFonts.poppins(
-                      color: AppColors.textPrimary,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _currency,
-                    style: GoogleFonts.poppins(
-                      color: AppColors.textSecondary,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: AppBar(
+            backgroundColor: AppColors.background,
+            title: Text(
+              "Profile",
+              style: GoogleFonts.poppins(color: AppColors.textPrimary),
             ),
-            const SizedBox(height: 20),
-
-            // Stats
-            Row(
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
               children: [
-                Expanded(
-                  child: _buildStatCard(
-                    "Monthly Income",
-                    "₹ ${_income.toStringAsFixed(0)}",
-                    AppColors.income,
+                // Profile Header
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: AppColors.card,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Icon(
+                          Icons.person_rounded,
+                          color: AppColors.primary,
+                          size: 40,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        _name,
+                        style: GoogleFonts.poppins(
+                          color: AppColors.textPrimary,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _currency,
+                        style: GoogleFonts.poppins(
+                          color: AppColors.textSecondary,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildStatCard(
-                    "Transactions",
-                    "$totalTransactions",
-                    AppColors.accent,
-                  ),
+                const SizedBox(height: 20),
+
+                // Stats
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildStatCard(
+                        "Monthly Income",
+                        "₹ ${_income.toStringAsFixed(0)}",
+                        AppColors.income,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildStatCard(
+                        "Transactions",
+                        "$totalTransactions",
+                        AppColors.accent,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Menu Items
+                _buildMenuItem(
+                  Icons.edit_rounded,
+                  "Edit Profile",
+                  AppColors.primary,
+                  () async {
+                    await _showEditDialog();
+                  },
+                ),
+                const SizedBox(height: 12),
+                _buildMenuItem(
+                  Icons.delete_rounded,
+                  "Clear All Data",
+                  AppColors.expense,
+                  _clearData,
+                ),
+                const SizedBox(height: 12),
+                _buildMenuItem(
+                  Icons.logout_rounded,
+                  "Logout",
+                  AppColors.expense,
+                  _logout,
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-
-            // Menu Items
-            _buildMenuItem(
-              Icons.edit_rounded,
-              "Edit Profile",
-              AppColors.primary,
-              () async {
-                await _showEditDialog();
-              },
-            ),
-            const SizedBox(height: 12),
-            _buildMenuItem(
-              Icons.delete_rounded,
-              "Clear All Data",
-              AppColors.expense,
-              _clearData,
-            ),
-            const SizedBox(height: 12),
-            _buildMenuItem(
-              Icons.logout_rounded,
-              "Logout",
-              AppColors.expense,
-              _logout,
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

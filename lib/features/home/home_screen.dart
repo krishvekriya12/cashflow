@@ -100,22 +100,27 @@ class _HomeContentState extends State<HomeContent> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 24),
-            _buildBalanceCard(),
-            const SizedBox(height: 24),
-            _buildIncomeExpenseRow(),
-            const SizedBox(height: 24),
-            _buildRecentTransactions(),
-          ],
-        ),
-      ),
+    return ValueListenableBuilder(
+      valueListenable: _box.listenable(),
+      builder: (context, box, child) {
+        return SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 24),
+                _buildBalanceCard(),
+                const SizedBox(height: 24),
+                _buildIncomeExpenseRow(),
+                const SizedBox(height: 24),
+                _buildRecentTransactions(),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

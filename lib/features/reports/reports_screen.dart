@@ -88,17 +88,19 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final transactions = _filteredTransactions;
-
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.background,
-        title: Text(
-          "Reports",
-          style: GoogleFonts.poppins(color: AppColors.textPrimary),
-        ),
-      ),
+    return ValueListenableBuilder(
+      valueListenable: _box.listenable(),
+      builder: (context, box, _) {
+        final transactions = _filteredTransactions;
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: AppBar(
+            backgroundColor: AppColors.background,
+            title: Text(
+              "Reports",
+              style: GoogleFonts.poppins(color: AppColors.textPrimary),
+            ),
+          ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -324,6 +326,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ),
       ),
     );
+    });
   }
 
   Widget _buildSummaryCard(
