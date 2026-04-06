@@ -39,6 +39,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   }
 
   Future<void> _saveTransaction() async {
+    HapticFeedback.lightImpact();
     if (_amountController.text.isEmpty) {
       ScaffoldMessenger.of(
         context,
@@ -67,6 +68,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         'date': _selectedDate.toIso8601String(),
       });
 
+      HapticFeedback.mediumImpact();
+
       if (!mounted) return;
       Navigator.pop(context);
     } catch (e) {
@@ -82,22 +85,27 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.background,
-        title: Text(
-          "Add Transaction",
-          style: GoogleFonts.poppins(color: AppColors.textPrimary),
-        ),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-            color: AppColors.textPrimary,
+    return FractionallySizedBox(
+      heightFactor: 0.92,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+        child: Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: AppBar(
+            backgroundColor: AppColors.background,
+            title: Text(
+              "Add Transaction",
+              style: GoogleFonts.poppins(color: AppColors.textPrimary),
+            ),
+            leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_drop_down_rounded,
+                color: AppColors.textPrimary,
+                size: 32,
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
           ),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -362,6 +370,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           ],
         ),
       ),
+    ),
+    ),
     );
   }
 }

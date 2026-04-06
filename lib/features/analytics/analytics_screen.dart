@@ -517,7 +517,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   padding: const EdgeInsets.only(top: 60),
                   child: Column(
                     children: [
-                      const Text("📊", style: TextStyle(fontSize: 60)),
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.donut_large_rounded, size: 64, color: AppColors.primary),
+                      ),
                       const SizedBox(height: 16),
                       Text(
                         "No expense data yet!",

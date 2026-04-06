@@ -9,6 +9,8 @@ import '../add_expense/add_expense_screen.dart';
 import '../reports/reports_screen.dart';
 import '../profile/profile_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
+import 'package:flutter/services.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,27 +25,44 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = const [
     HomeContent(),
     AnalyticsScreen(),
-    SizedBox(),
     ReportsScreen(),
     ProfileScreen(),
   ];
+
+  void _openAddExpenseModal(BuildContext context) {
+    HapticFeedback.mediumImpact();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: const AddExpenseScreen(),
+        );
+      },
+    ).then((_) => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: _screens[_currentIndex == 2 ? 0 : _currentIndex],
+      body: _screens[_currentIndex],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _openAddExpenseModal(context),
+        backgroundColor: AppColors.primary,
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: const Icon(Icons.add_rounded, color: Colors.white, size: 32),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: CashFlowBottomNav(
         currentIndex: _currentIndex,
         onTap: (index) {
-          if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AddExpenseScreen()),
-            ).then((_) => setState(() {}));
-          } else {
-            setState(() => _currentIndex = index);
-          }
+          setState(() => _currentIndex = index);
         },
       ),
     );
@@ -333,7 +352,7 @@ class _HomeContentState extends State<HomeContent> {
   }
 
   Widget _buildRecentTransactions() {
-    final transactions = _box.values.toList().reversed.take(5).toList();
+    final transactions = _box.toMap().entries.toList().reversed.take(5).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,24 +368,55 @@ class _HomeContentState extends State<HomeContent> {
         const SizedBox(height: 16),
         transactions.isEmpty
             ? Center(
-                child: Text(
-                  "No transactions yet!",
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.account_balance_wallet_rounded, size: 64, color: AppColors.primary),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "Your journey begins here!",
                   style: GoogleFonts.poppins(
-                    color: AppColors.textSecondary,
                     fontSize: 14,
                   ),
                 ),
-              )
+              ],
+            ))
             : ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: transactions.length,
                 itemBuilder: (context, index) {
-                  final t = transactions[index];
+                  final entry = transactions[index];
+                  final key = entry.key;
+                  final t = entry.value as Map;
                   final isExpense = t['type'] == 'Expense';
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.all(16),
+                  return Dismissible(
+                    key: Key(key.toString()),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(colors: [Colors.redAccent, Colors.red]),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      alignment: Alignment.centerRight,
+                      child: const Icon(Icons.delete_sweep_rounded, color: Colors.white, size: 30),
+                    ),
+                    onDismissed: (direction) {
+                      HapticFeedback.mediumImpact();
+                      _box.delete(key);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: AppColors.card,
                       borderRadius: BorderRadius.circular(16),
@@ -436,7 +486,7 @@ class _HomeContentState extends State<HomeContent> {
                         ),
                       ],
                     ),
-                  );
+                  ));
                 },
               ),
       ],

@@ -33,9 +33,8 @@ class CashFlowBottomNav extends StatelessWidget {
           children: [
             _buildNavItem(0, Icons.home_rounded, "Home"),
             _buildNavItem(1, Icons.bar_chart_rounded, "Analytics"),
-            _buildAddButton(),
-            _buildNavItem(3, Icons.receipt_long_rounded, "Reports"),
-            _buildNavItem(4, Icons.person_rounded, "Profile"),
+            _buildNavItem(2, Icons.receipt_long_rounded, "Reports"),
+            _buildNavItem(3, Icons.person_rounded, "Profile"),
           ],
         ),
       ),
@@ -64,25 +63,4 @@ class CashFlowBottomNav extends StatelessWidget {
     );
   }
 
-  Widget _buildAddButton() {
-    return GestureDetector(
-      onTap: () => onTap(2),
-      child: Container(
-        width: 52,
-        height: 52,
-        decoration: BoxDecoration(
-          color: AppColors.primary,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.4),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
-      ),
-    );
-  }
 }

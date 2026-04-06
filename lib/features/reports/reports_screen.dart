@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
@@ -30,9 +31,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
     });
   }
 
-  List get _filteredTransactions {
-    return _box.values
-        .where((t) {
+  List<MapEntry<dynamic, dynamic>> get _filteredTransactions {
+    return _box.toMap().entries
+        .where((entry) {
+          final t = entry.value as Map;
           final date = DateTime.parse(t['date']);
           return date.month == _selectedMonth.month &&
               date.year == _selectedMonth.year;
@@ -44,14 +46,14 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
   double get _monthlyIncome {
     return _filteredTransactions
-        .where((t) => t['type'] == 'Income')
-        .fold(0.0, (sum, t) => sum + (t['amount'] as double));
+        .where((entry) => (entry.value as Map)['type'] == 'Income')
+        .fold(0.0, (sum, entry) => sum + ((entry.value as Map)['amount'] as double));
   }
 
   double get _monthlyExpense {
     return _filteredTransactions
-        .where((t) => t['type'] == 'Expense')
-        .fold(0.0, (sum, t) => sum + (t['amount'] as double));
+        .where((entry) => (entry.value as Map)['type'] == 'Expense')
+        .fold(0.0, (sum, entry) => sum + ((entry.value as Map)['amount'] as double));
   }
 
   String get _monthName {
@@ -101,7 +103,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               style: GoogleFonts.poppins(color: AppColors.textPrimary),
             ),
           ),
-      body: SingleChildScrollView(
+          body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,14 +234,25 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
             transactions.isEmpty
                 ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 40),
-                      child: Text(
-                        "No transactions this month!",
-                        style: GoogleFonts.poppins(
-                          color: AppColors.textSecondary,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 40),
+                        Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.receipt_long_rounded, size: 64, color: AppColors.primary),
                         ),
-                      ),
+                        const SizedBox(height: 16),
+                        Text(
+                          "No transactions this month!",
+                          style: GoogleFonts.poppins(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
                     ),
                   )
                 : ListView.builder(
@@ -247,13 +260,32 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: transactions.length,
                     itemBuilder: (context, index) {
-                      final t = transactions[index];
+                      final entry = transactions[index];
+                      final key = entry.key;
+                      final t = entry.value as Map;
                       final isExpense = t['type'] == 'Expense';
                       final date = DateTime.parse(t['date']);
 
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        padding: const EdgeInsets.all(16),
+                      return Dismissible(
+                        key: Key(key.toString()),
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(colors: [Colors.redAccent, Colors.red]),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          alignment: Alignment.centerRight,
+                          child: const Icon(Icons.delete_sweep_rounded, color: Colors.white, size: 30),
+                        ),
+                        onDismissed: (direction) {
+                          HapticFeedback.mediumImpact();
+                          _box.delete(key);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: AppColors.card,
                           borderRadius: BorderRadius.circular(16),
@@ -319,14 +351,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             ),
                           ],
                         ),
-                      );
+                      ));
                     },
                   ),
           ],
         ),
       ),
     );
-    });
+      },
+    );
   }
 
   Widget _buildSummaryCard(
